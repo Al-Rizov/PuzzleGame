@@ -1,0 +1,48 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+}
+
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 500px;
+    height: 500px;
+    background-color: black;
+    border: 20px solid red;
+    
+    
+}
+
+.image_pieces {
+    margin: 0;
+    width: 20%;
+    height: 20%;
+    border: 0.5px solid white;
+}
+
+.jigsaw_box_pieces {
+    
+    width: 80px;
+    height: 80px;
+    border: 0.5px solid white;
+}
+
+#jigsaw_box {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    width: 1044px;
+    height: 200px;
+    border: 2px solid red;
+}
