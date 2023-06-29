@@ -1,96 +1,141 @@
 
 const board = document.getElementById('board');
-const jigsawBox = document.getElementById('jigsaw_box');
+const jigsawBoxLeft = document.getElementById('jigsaw_box_left');
+const jigsawBoxRight = document.getElementById('jigsaw_box_right');
+const jigsawBoxBottom = document.getElementById('jigsaw_box_bottom');
+const boxes = [jigsawBoxLeft,jigsawBoxRight, jigsawBoxBottom];
 
-let current_tile;
-let other_tile;
-let pieces = [];
+let dragged = null;
+let jigsawsOrder = [];
+let allTiles = null;
+let allJigsaws = [];
 
-let used_numbers = [];
+
 let turns_counter= 0;
-let events = ['dragstart', 'dragover', 'dragenter', 'dragleave', 'drop', 'dragend'];
-const actions = [dragStart, dragOver, dragEnter, dragLeave, dragDrop, dragEnd];
  
+/*
+    3. Bring back turn-counter.
+    5. Add a 'finished' effect, once puzzle is complete.
+    6. Add a 'picked-up' and a 'hover' effect.
+*/
 
-buildBoard(5,5);
-findJigsaws(pieces);
 
-function buildBoard(rows, columns) {
-    let number_of_tiles = rows*columns;
+buildBoard();
+shuffleJigsaws();
+buildJigsawboxes();
+makeJigsaws();
 
-    for(let i=0; i<rows; i++) {
-        for(let i=0; i<columns; i++) {
-            let tile = document.createElement('img');
-            tile.classList.add('image_pieces');
 
-            events.forEach(ev => tile.addEventListener(ev, actions[events.indexOf(ev)]));
-            board.append(tile);
-        }
+
+function buildBoard() {
+
+    
+    for(let i=1; i<=25; i++) {
+        let tile = document.createElement('div');
+        tile.classList.add('boardTile');
+        tile.setAttribute('data-id', i)
+        board.appendChild(tile);
+        
+        tile.addEventListener('dragenter', (ev)=>{ev.preventDefault()})
+        tile.addEventListener('dragover', (ev)=>{ev.preventDefault()})
+        tile.addEventListener('drop', (ev)=>{ev.preventDefault();
+            
+            
+            let parent = ev.target.parentNode;
+            if(parent.classList.contains('occupied')){
+                let oldTile = ev.target;
+                
+                dragged.parentNode.appendChild(oldTile);
+                if(dragged.parentNode === boxes[0] || dragged.parentNode === boxes[1] || dragged.parentNode === boxes[2])
+                {oldTile.classList.remove('onBoard');}
+
+                parent.appendChild(dragged);
+                dragged.classList.add('onBoard');
+                return
+            }
+
+            if(ev.target.classList.contains('boardTile')){dragged.classList.add('onBoard')}
+            ev.target.appendChild(dragged);
+            ev.target.classList.add('occupied');
+            checkCompletion();
+            })
+            
     }
+    
+}
 
-    for(let i = 1; i <= number_of_tiles; i++) {
-        let order_number = Math.floor((Math.random()*number_of_tiles) + 1);
+function shuffleJigsaws() {
+
+    let used_numbers = [];
+    for(let i=1; i<=25; i++) {
+        let order_number = Math.floor((Math.random()*25) + 1);
             
         if(used_numbers.includes(order_number)) {
             i--;
         } else {
             used_numbers.push(order_number);
-            pieces.push(order_number.toString());
+            jigsawsOrder.push(order_number.toString());
         }
         }
-    
-    }
+}
 
-    
+function makeJigsaws() {
+    for(let i=1; i<=jigsawsOrder.length; i++) {
+        let tile = document.createElement('div');
+        let jigsaw = document.createElement('img');
+        tile.classList.add('jigsawTile');
+        jigsaw.classList.add('jigsawImage');
+        jigsaw.src = 'Images/Park/jigsaws/' + i + '.png';
+        tile.setAttribute('data-id', i);
+        tile.appendChild(jigsaw);
 
-function findJigsaws(container) {
-    for(let i=0; i<pieces.length; i++) {
-        let tile = document.createElement('img');
-        tile.classList.add('jigsaw_box_pieces');
-        tile.src = 'Images/' + container[i] + '.jpg';
+        
+        tile.setAttribute('draggable', true);
+        tile.addEventListener('dragstart', (ev)=>{dragged = ev.target;});
+        tile.addEventListener('dragenter', (ev)=>{ev.preventDefault()})
+        tile.addEventListener('dragover', (ev)=>{ev.preventDefault()})
+        
+        tile.addEventListener('drop', (ev)=>{
+            if(ev.target.hasChildNodes()){return}
+            ev.preventDefault();
+            dragged.parentNode.removeChild(dragged);
+            ev.target.appendChild(dragged);
+            ev.target.classList.add('occupied');
+        })
 
-        events.forEach(ev => tile.addEventListener(ev, actions[events.indexOf(ev)]));
-        jigsawBox.append(tile);
-        }
-    }
-
-
-
-
-
-function dragStart() {
-    current_tile = this;
-    }
-
-function dragOver(e) {
-    e.preventDefault();
-    }
-
-function dragEnter(e) {
-    e.preventDefault();
-    }
-
-function dragLeave() {
-
-    }
-
-function dragDrop(e) {
-    e.preventDefault();
-    other_tile = this; 
-    }
-
-function dragEnd() {
-    if (current_tile.src.includes("blank")) {
-        return;
-    }
-    let currImg = current_tile.src;
-    let otherImg = other_tile.src;
-    current_tile.src = otherImg;
-    other_tile.src = currImg;
-
-    turns_counter += 1;
-    document.getElementById("turns").innerText = turns_counter;
+        
+        allJigsaws.push(tile);
+        
     }
 
     
+    for(i=0; i<allJigsaws.length; i++) {
+        if(jigsawBoxLeft.children.length < 6){jigsawBoxLeft.appendChild(allJigsaws[jigsawsOrder[i]-1]);}
+        else if(jigsawBoxRight.children.length < 6){jigsawBoxRight.appendChild(allJigsaws[jigsawsOrder[i]-1]);}
+        else{jigsawBoxBottom.appendChild(allJigsaws[jigsawsOrder[i]-1]);}
+    }
+}
+
+function buildJigsawboxes(){
+
+    boxes.forEach(box => {box.addEventListener('dragenter', (ev)=>{ev.preventDefault()});});
+    boxes.forEach(box => {box.addEventListener('dragover', (ev)=>{ev.preventDefault()});});
+    boxes.forEach(box => {box.addEventListener('drop', (ev)=>{
+        ev.preventDefault();
+        box.appendChild(dragged);
+        dragged.classList.remove('onBoard');
+    });});
+}
+
+function checkCompletion() {
+    
+    let correctPlacements = 0;
+    allTiles = document.querySelectorAll('.boardTile');
+    allTiles.forEach(tile => {
+        if(tile.children[0] === undefined){return}
+        if(tile.dataset.id === tile.children[0].dataset.id) {correctPlacements++;}
+    });
+   
+    if(correctPlacements === allTiles.length) {console.log('Congratulations!')}
+}
       

@@ -9,11 +9,18 @@
     </head>
     <body>
         <h1>Puzzle</h1>
-        <div id='board'></div>
-        <h2>Turns: <span id='turns'>0</span></h2>
-        <div id='jigsaw_box'></div>
+
+        <div class="gamefield">
+        <div id="gamefieldTopHalf">
+            <div id='jigsaw_box_left' class="jigsawBox"></div>
+            <div id='board'></div>
+            <div id='jigsaw_box_right' class="jigsawBox"></div>
+        </div>
+    </div>
+        <div id='jigsaw_box_bottom' class="jigsawBoxBottom"></div>
 
 
         <script src="script.js"></script>
+        
     </body>
 </html>
