@@ -5,19 +5,33 @@
         <meta name="viewport" content="width=device-width,
         initial-scale=1.0" />
         <link rel="stylesheet" href="index.css" />
-        <title>New Project</title>
+        <title>Jigsaw Puzzles</title>
     </head>
     <body>
-        <h1>Puzzle</h1>
+        <h1 id="title">Pick a puzzle to solve...</h1>
 
-        <div class="gamefield">
-        <div id="gamefieldTopHalf">
+        <div id='modal' class="modal">
+            
+            <img src="Images/Children/children-resized.png" alt="Children with Dog" id="children" class="modalOption">
+            
+            <img src="Images/GroceryShop/grocer-resized.png" alt="Grocery Shop" id="grocer" class="modalOption">
+            
+            <img src="Images/Park/park-resized.png" alt="The Park" id="park" class="modalOption">
+            
+            <img src="Images/Icerink/icerink-resized.jpg" alt="Icerink" id="icerink" class="modalOption">
+            
+        </div>
+
+        
+        <div id="topHalf">
             <div id='jigsaw_box_left' class="jigsawBox"></div>
             <div id='board'></div>
             <div id='jigsaw_box_right' class="jigsawBox"></div>
         </div>
-    </div>
+        
+        <button id="restart" class="restartBtn inactive">Start a New Game</button>
         <div id='jigsaw_box_bottom' class="jigsawBoxBottom"></div>
+        
 
 
         <script src="script.js"></script>

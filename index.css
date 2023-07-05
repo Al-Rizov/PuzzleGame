@@ -1,41 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap');
 * {
     box-sizing: border-box;
     background-color: antiquewhite;
 }
 
 body {
-    
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
     margin: 0;
+    font-family: 'Kalam', cursive;
 }
 
-.gamefield {
-    display: flex;
-    flex-direction: column;
-    width: 70%;
+#title{
+    color:lightsalmon;
+    user-select: none;
 }
 
-#gamefieldTopHalf{
+
+
+#topHalf{
     display: flex;
     justify-content: space-between;
 }
 
 #board {
-    margin-bottom: 15px;
+    margin:0 25px 15px 25px;
     display: flex;
     flex-wrap: wrap;
     width: 480px;
     height: 480px;
-    background-color: transparent;
-    border: 1px solid gold;
+    background-color: transparent;;
+    transition: all 0.3s ease-in-out;
     
 }
 
+.finished {
+    pointer-events: none;
+}
 
+#board.finished{
+    transform: scale(1.05);
+}
 
 .boardTile {
     margin: 0;
@@ -43,6 +52,15 @@ body {
     height: 20%;
     border: 0.5px solid gold;
     background-color: lightsalmon;
+    transition: all 0.18s ease-in-out;
+}
+
+.boardTile.dragover{
+    opacity: 50%;
+}
+
+.boardTile.finished {
+    border: none;
 }
 
 .jigsawTile{
@@ -50,11 +68,22 @@ body {
     width: 80px;
     height: 80px;
     border: solid 0.5px black;
+    user-select: none;
+    transition: all 0.18s ease-in-out;
+}
+
+.jigsawTile:hover{
+    transform: scale(1.2);
+    box-shadow: 0 0 20px white;
 }
 
 .jigsawTile.onBoard{
     width: 100%;
     height: 100%;
+}
+
+.jigsawTile.finished{
+    border: none;
 }
 
 .jigsawImage {
@@ -63,6 +92,10 @@ body {
     height: 100%;
     border: 0.5px solid white;
     pointer-events: none;
+}
+
+.jigsawImage.finished{
+    border: none;
 }
 
 .jigsawBox {
@@ -76,6 +109,56 @@ body {
 .jigsawBoxBottom {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     height: 80px;
-    width: 100%;
+    min-width: 600px;
+}
+
+/* Modal */
+
+.modal{
+    position: fixed;
+    width: 500px;
+    min-width: 420px;
+    min-height: 500px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 100;
+    border-radius: 5px;
+    background-color: darksalmon;
+    transition: all 0.3s ease-in-out;
+
+}
+
+.modal.inactive{
+    transform: scale(0);
+}
+
+.modalOption{
+    margin: 0;
+    border-radius: 5px;
+    width:200px;
+    height:200px;
+    transition: all 0.3s ease-in-out;
+}
+
+.modalOption:hover{
+    transform: scale(1.1);
+    box-shadow: 0px 0px 35px white;
+}
+
+.restartBtn{
+    height: 60px;
+    width: 150px;
+    border-radius: 25px;
+    background-color: khaki;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Kalam', cursive;
+    font-size: large;
+}
+
+.restartBtn.inactive{
+    transform: scale(0);
 }
